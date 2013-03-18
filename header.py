@@ -6,7 +6,7 @@ import datetime
 #We create a function to clearify the code
 #Parsing arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("file_name", type=str, 
+parser.add_argument("file_name", type=str,
                     help="the class name")
 parser.add_argument("-p","--project_name", type=str,
                     help="the project name", default="None")
@@ -23,12 +23,12 @@ try:
     classname = args.file_name.capitalize()
     up = args.file_name.upper() + "_HH"
     file.write("#ifndef " + up +"\n# define " + up + "\n\nclass " + classname)
-    file.write("\n{\n  public://#! const/dec")
+    file.write("\n{\n// \const /dec\n  public:")
     file.write("\n    " + classname + "();\n    virtual ~" + classname)
     # The comment is for the generatecc script to generate getter setter
-    file.write("();\n\n//#! members declarations\n  private:\n\n")
-    file.write("//#! getter/setter\n  public:\n\n//#! methods\n  public:\n\n};\n\n")
-    file.write("#endif //! " + up)
+    file.write("""();\n\n// \members declarations\n  private:\n
+// \getter /setter\n  public:\n\n//#! methods\n  public:\n\n};\n\n #endif //! """)
+    file.write(up)
 except OSError:
     print ("Can't create the header file.")
     quit()
