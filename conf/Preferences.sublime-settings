@@ -37,7 +37,7 @@
     "fade_fold_buttons": true,
 
     // Columns in which to display vertical rulers
-    "rulers": [],
+    "rulers": [80],
 
     // Set to true to turn spell checking on by default
     "spell_check": false,
