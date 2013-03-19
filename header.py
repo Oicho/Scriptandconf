@@ -26,11 +26,11 @@ try:
     classname = args.file_name.capitalize()
     up = args.file_name.upper() + "_HH"
     file.write("#ifndef " + up + "\n# define " + up + "\n\nclass " + classname)
-    file.write("\n{\n// \const /dec\n  public:\n    ")
+    file.write(": Instruction\n{\n// \const /dec\n  public:\n    ")
     file.write(classname + "();\n    virtual ~" + classname)
     # The comment is for the generatecc script to generate getter setter
     file.write("""();\n\n// \members declarations\n  private:\n
-// \getter /setter\n  public:\n\n//#! methods\n  public:\n\n};\n
+// \getter /setter\n  public:\n\n// \methods\n  public:\n\n};\n
 #endif //! """)
     file.write(up)
 
