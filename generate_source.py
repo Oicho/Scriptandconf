@@ -3,8 +3,40 @@
 import argparse
 
 
+global gspos
+
+
 def parse_header(header_file):
-    header_file
+    l_string = header_file.readlines()
+    i = 0
+    methods_list = []
+    members_list = []
+    constructor = ""
+    destructor = ""
+    for i in range(len(l_string)):
+        aux_parse(l_string, i, methods_list, members_list)
+
+
+def aux_parse(l_string, i, methods_list, members_list):
+    while i < len(l_string) and not l_string[i].find("// \\"):
+        i += 1
+    if l_string[i] == "// \\getter /setter":
+        i += 1
+        gspos = i
+    elif l_string[i] == "// \\const /dec":
+        i += 2
+    elif l_string[i] == "// \\methods":
+        i += 2
+        while i < len(l_string) and not l_string[i].find("// \\") and not l_string[i].find("}"):
+            if l_string[i] != "\n" and not l_string[i].find("//"):
+                methods_list.append(l_string[i])
+            i += 1
+    else:
+        i += 2
+        while i < len(l_string) and not l_string[i].find("// \\") and not l_string[i].find("}"):
+            if l_string[i] != "\n" and not l_string[i].find("//"):
+                members_list.append(l_string[i])
+            i += 1
 
 
 def getterwrite(classname, identifier, idtype, file_hxx):
@@ -42,7 +74,7 @@ parser.add_argument("-v", "--verbose", type=int, help="Level of information you 
 args = parser.parse_args()
 file_cc = "#include \"" + args.file_name + "\"\n\n"
 preprocessdef = (args.file_name.replace(".hh.", "_HXX")).upper()
-file_hxx = "#ifndef " + preprocessdef + "\n# define " + preprocessdef
+file_hxx = "#ifndef " + preprocessdef + "\n# define " + preprocessdef + "\n\n"
 
 try:
     h_file = open(args.file_name, "r")
