@@ -6,14 +6,36 @@ import argparse
 global gspos
 
 
+class Member(object):
+    """Represent a class members and its setter/getter
+
+    attributes: name_, typeid_
+    """
+    def __init__(self, name, typeid="void"):
+        self.name_ = name
+        self.typeid_ = typeid
+
+    def generate_set_proto(self):
+        temp = "void " + self.name_ + "set (" + self.typeid_ + "input);"
+        return temp
+
+    def generate_get_proto(self):
+        temp = self.typeid_ + " " + self.name_ + "get ();"
+        return temp
+    def gen_get_def(self, classname):
+
+    def gen_set_def(self, classname):
+
 def parse_header(header_file):
     l_string = header_file.readlines()
     i = 0
     methods_list = []
     members_list = []
-    constructor = ""
-    destructor = ""
+#    constructor = ""
+#    destructor = ""
     for i in range(len(l_string)):
+        if l_string[i].find("}"):
+            break
         aux_parse(l_string, i, methods_list, members_list)
 
 
