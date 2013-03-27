@@ -35,40 +35,60 @@ class Member(object):
         return temp
 
 
-def parse_header(header_file, file_cc, file_hxx, classname):
+def parse_header(argument, file_cc, file_hxx):
+    header_file = open(argument.file_name, "r")
+    classname = (argument.file_name.replace(".hh", "")).capitalize()
     l_string = header_file.readlines()
     i = 0
     methods_list = []
     members_list = []
+    print(l_string)
     for i in range(len(l_string)):
-        if l_string[i].find("}"):
+        if l_string[i].find("}") != -1:
+            print("endoffile")
             break
-        aux_parse(l_string, i, methods_list, members_list)
+        i = aux_parse(l_string, i, methods_list, members_list)
+    print(members_list)
     for i in range(len(members_list)):
         file_hxx += members_list[i].gen_set_def(classname)
         file_hxx += members_list[i].gen_get_def(classname)
+    print("hxx file")
+    print(file_hxx)
 
 
 def aux_parse(l_string, i, methods_list, members_list):
-    while i < len(l_string) and not l_string[i].find("// \\"):
+    while i < len(l_string) and l_string[i].find("// \\") == -1:
         i += 1
-    if l_string[i] == "// \\getter /setter":
+    if i == len(l_string):
+        return i
+    print("curline is : " + l_string[i])
+    if l_string[i] == "// \\getter /setter\n":
+        print("found getter.setter")
         i += 1
         gspos = i
-    elif l_string[i] == "// \\const /dec":
+        return i
+    elif l_string[i] == "// \\const /dec\n":
+        print("found destructor/const")
         i += 2
-    elif l_string[i] == "// \\methods":
+        return i
+    elif l_string[i] == "// \\methods\n":
+        print("found methods")
         i += 2
         while i < len(l_string) and not l_string[i].find("// \\") and not l_string[i].find("}"):
             if l_string[i] != "\n" and not l_string[i].find("//"):
                 methods_list.append(l_string[i])
             i += 1
+        return i
     else:
+        print("default")
         i += 2
         while i < len(l_string) and not l_string[i].find("// \\") and not l_string[i].find("}"):
             if l_string[i] != "\n" and not l_string[i].find("//"):
                 members_list.append(Member(l_string[i]))
             i += 1
+        print ("New member list")
+        print (members_list)
+        return i
 
 
 def getterwrite(classname, identifier, idtype, file_hxx):
@@ -111,5 +131,6 @@ file_hxx = "#ifndef " + preprocessdef + "\n# define " + preprocessdef + "\n\n"
 
 try:
     h_file = open(args.file_name, "r")
+    parse_header(args, file_cc, file_hxx)
 except OSError:
     print("Incorrect input header file")
