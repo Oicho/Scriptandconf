@@ -35,33 +35,15 @@ class Member(object):
         return temp
 
 
-def parse_header(argument, file_cc, file_hxx):
-    header_file = open(argument.file_name, "r")
-    classname = (argument.file_name.replace(".hh", "")).capitalize()
-    l_string = header_file.readlines()
-    i = 0
-    methods_list = []
-    members_list = []
-    print(l_string)
-    for i in range(len(l_string)):
-        if l_string[i].find("}") != -1:
-            print("endoffile")
-            break
-        i = aux_parse(l_string, i, methods_list, members_list)
-    print(members_list)
-    for i in range(len(members_list)):
-        file_hxx += members_list[i].gen_set_def(classname)
-        file_hxx += members_list[i].gen_get_def(classname)
-    print("hxx file")
-    print(file_hxx)
-
-
 def aux_parse(l_string, i, methods_list, members_list):
     while i < len(l_string) and l_string[i].find("// \\") == -1:
         i += 1
+
     if i == len(l_string):
         return i
-    print("curline is : " + l_string[i])
+
+    print("curline is " + str(i) + ": " + l_string[i])
+
     if l_string[i] == "// \\getter /setter\n":
         print("found getter.setter")
         i += 1
@@ -70,41 +52,54 @@ def aux_parse(l_string, i, methods_list, members_list):
     elif l_string[i] == "// \\const /dec\n":
         print("found destructor/const")
         i += 2
+        print(i)
         return i
     elif l_string[i] == "// \\methods\n":
         print("found methods")
         i += 2
-        while i < len(l_string) and not l_string[i].find("// \\") and not l_string[i].find("}"):
-            if l_string[i] != "\n" and not l_string[i].find("//"):
+        while (i < len(l_string) and
+               l_string[i].find("// \\") == -1 and
+               l_string[i].find("}") == -1):
+
+            if l_string[i] != "\n" and l_string[i].find("//") == -1:
                 methods_list.append(l_string[i])
             i += 1
         return i
     else:
         print("default")
         i += 2
-        while i < len(l_string) and not l_string[i].find("// \\") and not l_string[i].find("}"):
-            if l_string[i] != "\n" and not l_string[i].find("//"):
+        while (i < len(l_string) and
+               l_string[i].find("// \\") == -1 and
+               l_string[i].find("}") == -1):
+
+            if l_string[i] != "\n" and l_string[i].find("//") == -1:
                 members_list.append(Member(l_string[i]))
+                print("new members")
+                print(members_list)
             i += 1
-        print ("New member list")
-        print (members_list)
         return i
 
 
-def getterwrite(classname, identifier, idtype, file_hxx):
-    file_hxx += "inline\nvoid\n" + classname + "::" + identifier + "get("
-    parameter = " param_" + identifier
-    file_hxx += idtype + parameter + ")\n{\n  this->" + identifier + " = "
-    file_hxx += parameter + ";\n}\n\n"
-
-
-def setterwrite(classname, identifier, idtype, file_hxx):
-    file_hxx += "inline\nvoid\n" + classname + "::" + identifier
-    file_hxx += "set()\n{\n  return this->" + identifier + ";\n}\n\n"
-
-
-def consdeswrite(classname, identifier, file_cc):
-    file_cc += classname + "::" + identifier + "\n{\n\n\n}\n"
+def parse_header(argument, file_cc, file_hxx):
+    header_file = open(argument.file_name, "r")
+    classname = (argument.file_name.replace(".hh", "")).capitalize()
+    l_string = header_file.readlines()
+    i = 0
+    methods_list = []
+    members_list = []
+    print(l_string)
+    while i < len(l_string):
+        if l_string[i].find("}") != -1:
+            print("endoffile")
+            break
+        print(str(i) + "main loop")
+        i = aux_parse(l_string, i, methods_list, members_list)
+    print(members_list)
+    for i in range(len(members_list)):
+        file_hxx += members_list[i].gen_set_def(classname)
+        file_hxx += members_list[i].gen_get_def(classname)
+    print("hxx file")
+    print(file_hxx)
 
 
 def methodswrite(classname, typeid, identifier, params, file_cc):
@@ -126,7 +121,7 @@ parser.add_argument("-v", "--verbose", type=int, help="Level of information you 
                     default=0)
 args = parser.parse_args()
 file_cc = "#include \"" + args.file_name + "\"\n\n"
-preprocessdef = (args.file_name.replace(".hh.", "_HXX")).upper()
+preprocessdef = (args.file_name.replace(".hh", "_HXX")).upper()
 file_hxx = "#ifndef " + preprocessdef + "\n# define " + preprocessdef + "\n\n"
 
 try:
