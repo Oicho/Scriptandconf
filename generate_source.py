@@ -1,9 +1,11 @@
 #! /usr/bin/python3
 
 import argparse
-
+import datetime
 
 global gspos
+global eofpos
+global file_name
 
 
 class Member(object):
@@ -14,10 +16,10 @@ class Member(object):
     def __init__(self, input):
         temp = input.split()
         self.name_ = temp[len(temp) - 1].replace(";", "")
-        i = 0
-        self.typeid_ = ""
+        i = 1
+        self.typeid_ = temp[0]
         while i < len(temp) - 1:
-            self.typeid_ += temp[i]
+            self.typeid_ += " " + temp[i]
             i += 1
 
     def generate_set_proto(self):
@@ -56,7 +58,6 @@ def aux_parse(l_string, i, methods_list, members_list):
     elif l_string[i] == "// \\const /dec\n":
         print("found destructor/const")
         i += 2
-        print(i)
         return i
     elif l_string[i] == "// \\methods\n":
         print("found methods")
@@ -79,7 +80,6 @@ def aux_parse(l_string, i, methods_list, members_list):
             if l_string[i] != "\n" and l_string[i].find("//") == -1:
                 members_list.append(Member(l_string[i]))
                 print("new members" + l_string[i])
-                print(members_list)
             i += 1
         return i
 
@@ -99,11 +99,26 @@ def parse_header(argument, file_cc, file_hxx):
         print(str(i) + "main loop")
         i = aux_parse(l_string, i, methods_list, members_list)
     print(members_list)
+    # ajouter l'include dans le .hh
+    # ajouter les getter/setter dans les .hhh
     for i in range(len(members_list)):
         file_hxx += members_list[i].gen_set_def(classname)
         file_hxx += members_list[i].gen_get_def(classname)
-    print("hxx file")
+
+    print("file_hxx")
     print(file_hxx)
+    print(methods_list)
+
+
+def comment_header(project_name, file_type, now):
+    f = "/*\n**    " + file_name.replace(".hh", "") + file_type
+    f += "\n**      Created on: "
+    f += str(now.day) + "/" + str(now.month) + "/" + str(now.year)
+    f += """\n**      By Gauthier \"Oicho\" FRIDIERE
+**      Contact at: gauthier.fridiere@gmail.com
+**    Project name: """
+    f += project_name + "\n*/\n\n"
+    return f
 
 
 def methodswrite(classname, typeid, identifier, params, file_cc):
@@ -123,10 +138,17 @@ parser.add_argument("-f", "--force",
 parser.add_argument("-v", "--verbose", type=int, help="Level of information you \
                     want to be print on the standard output between 0 and 3",
                     default=0)
+
 args = parser.parse_args()
-file_cc = "#include \"" + args.file_name + "\"\n\n"
-preprocessdef = (args.file_name.replace(".hh", "_HXX")).upper()
-file_hxx = "#ifndef " + preprocessdef + "\n# define " + preprocessdef + "\n\n"
+now = datetime.datetime.now()
+f_tab = args.file_name.rsplit("/")
+file_name = f_tab[len(f_tab) - 1]
+file_cc = comment_header(args.project_name, ".cc", now)
+file_hxx = comment_header(args.project_name, ".hxx", now)
+file_cc += "#include \"" + file_name + "\"\n\n"
+preprocessdef = (file_name.replace(".hh", "_HXX")).upper()
+file_hxx += "#ifndef " + preprocessdef + "\n# define " + preprocessdef
+file_hxx += "\n\n# include " + file_name + "\n\n"
 
 try:
     h_file = open(args.file_name, "r")
