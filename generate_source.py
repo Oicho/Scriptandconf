@@ -13,11 +13,15 @@ class Member(object):
     """
     def __init__(self, input):
         temp = input.split()
-        self.name_ = temp[len(temp) - 1]
-        self.typeid_ = temp
+        self.name_ = temp[len(temp) - 1].replace(";", "")
+        i = 0
+        self.typeid_ = ""
+        while i < len(temp) - 1:
+            self.typeid_ += temp[i]
+            i += 1
 
     def generate_set_proto(self):
-        temp = self.name_ + "set(" + self.typeid_ + "input);\n"
+        temp = self.name_ + "set(" + self.typeid_ + " input);\n"
         return temp
 
     def generate_get_proto(self):
@@ -31,7 +35,7 @@ class Member(object):
 
     def gen_set_def(self, classname):
         temp = "inline\nvoid\n" + classname + "::" + self.name_ + "set(" + self.typeid_
-        temp += "input)\n{\n    this->" + self.name_ + " = input;\n}\n\n"
+        temp += " input)\n{\n    this->" + self.name_ + " = input;\n}\n\n"
         return temp
 
 
@@ -74,7 +78,7 @@ def aux_parse(l_string, i, methods_list, members_list):
 
             if l_string[i] != "\n" and l_string[i].find("//") == -1:
                 members_list.append(Member(l_string[i]))
-                print("new members")
+                print("new members" + l_string[i])
                 print(members_list)
             i += 1
         return i

@@ -1,9 +1,10 @@
 TODO
 Generate_source.py
--Memoriser les constru/destru
+cut le filepath pour avoir juste le nom du fichier
+//-Memoriser les constru/destru
 -Traiter methods list
-  Ecrire une classe member eui permettra de generer a la fois les prototypes et
-  les declarations
+//  Ecrire une classe member eui permettra de generer a la fois les prototypes et
+//  les declarations
 
 -Generer les getter/setter ecrire dans le .hh et dans le .cc a la suite des
 constructeurs
