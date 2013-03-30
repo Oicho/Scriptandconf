@@ -2,10 +2,16 @@
 
 import argparse
 import datetime
-
-global gspos
+import os
 global eofpos
 global file_name
+
+gspos = -1
+
+
+def methodswrite(classname, typeid, identifier, params, file_cc):
+    file_cc += typeid + "\n" + classname + "::" + identifier + "(" + params
+    file_cc += ")\n{\n}\n"
 
 
 class Member(object):
@@ -22,11 +28,11 @@ class Member(object):
             self.typeid_ += " " + temp[i]
             i += 1
 
-    def generate_set_proto(self):
-        temp = self.name_ + "set(" + self.typeid_ + " input);\n"
+    def gen_set_proto(self):
+        temp = "void " + self.name_ + "set(" + self.typeid_ + " input);\n"
         return temp
 
-    def generate_get_proto(self):
+    def gen_get_proto(self):
         temp = self.typeid_ + " " + self.name_ + "get();\n"
         return temp
 
@@ -47,13 +53,14 @@ def aux_parse(l_string, i, methods_list, members_list):
 
     if i == len(l_string):
         return i
-
     print("curline is " + str(i) + ": " + l_string[i])
 
     if l_string[i] == "// \\getter /setter\n":
         print("found getter.setter")
-        i += 1
+        i += 2
+        global gspos
         gspos = i
+        print("gspos = " + str(i))
         return i
     elif l_string[i] == "// \\const /dec\n":
         print("found destructor/const")
@@ -99,15 +106,29 @@ def parse_header(argument, file_cc, file_hxx):
         print(str(i) + "main loop")
         i = aux_parse(l_string, i, methods_list, members_list)
     print(members_list)
-    # ajouter l'include dans le .hh
-    # ajouter les getter/setter dans les .hhh
+    l_string.insert(i + 1, "\n# include \"" + file_name.replace(".hh", ".hxx") + "\n")
+    print(l_string)
+    # ajouter les getter/setter dans les .hh
+    print("gspos = " + str(gspos))
+    if gspos == -1:
+        print("Incorrect header file.")
+        quit()
+
     for i in range(len(members_list)):
+        l_string.insert(gspos, members_list[i].gen_get_proto())
+        l_string.insert(gspos, members_list[i].gen_set_proto())
         file_hxx += members_list[i].gen_set_def(classname)
         file_hxx += members_list[i].gen_get_def(classname)
-
+    file_hxx += "#endif " + (file_name.replace(".hh", "_HXX")).upper()
     print("file_hxx")
     print(file_hxx)
     print(methods_list)
+    print(l_string)
+    # Verifier l argument force
+    os.remove(argument.file_name)
+    new_header = open(argument.file_name, )
+    for j in range(len(l_string)):
+        new_header.write(l_string[i])
 
 
 def comment_header(project_name, file_type, now):
@@ -119,11 +140,6 @@ def comment_header(project_name, file_type, now):
 **    Project name: """
     f += project_name + "\n*/\n\n"
     return f
-
-
-def methodswrite(classname, typeid, identifier, params, file_cc):
-    file_cc += typeid + "\n" + classname + "::" + identifier + "(" + params
-    file_cc += ")\n{\n}\n"
 
 
 parser = argparse.ArgumentParser()
@@ -148,7 +164,7 @@ file_hxx = comment_header(args.project_name, ".hxx", now)
 file_cc += "#include \"" + file_name + "\"\n\n"
 preprocessdef = (file_name.replace(".hh", "_HXX")).upper()
 file_hxx += "#ifndef " + preprocessdef + "\n# define " + preprocessdef
-file_hxx += "\n\n# include " + file_name + "\n\n"
+file_hxx += "\n\n# include \"" + file_name + "\"\n\n"
 
 try:
     h_file = open(args.file_name, "r")
