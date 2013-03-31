@@ -29,11 +29,11 @@ class Member(object):
             i += 1
 
     def gen_set_proto(self):
-        temp = "void " + self.name_ + "set(" + self.typeid_ + " input);\n"
+        temp = "    void " + self.name_ + "set(" + self.typeid_ + " input);\n"
         return temp
 
     def gen_get_proto(self):
-        temp = self.typeid_ + " " + self.name_ + "get();\n"
+        temp = "    " + self.typeid_ + " " + self.name_ + "get();\n"
         return temp
 
     def gen_get_def(self, classname):
@@ -106,7 +106,7 @@ def parse_header(argument, file_cc, file_hxx):
         print(str(i) + "main loop")
         i = aux_parse(l_string, i, methods_list, members_list)
     print(members_list)
-    l_string.insert(i + 1, "\n# include \"" + file_name.replace(".hh", ".hxx") + "\n")
+    l_string.insert(i + 1, "\n# include \"" + file_name.replace(".hh", ".hxx") + "\"\n")
     print(l_string)
     # ajouter les getter/setter dans les .hh
     print("gspos = " + str(gspos))
@@ -126,9 +126,9 @@ def parse_header(argument, file_cc, file_hxx):
     print(l_string)
     # Verifier l argument force
     os.remove(argument.file_name)
-    new_header = open(argument.file_name, )
+    new_header = open(argument.file_name, "w")
     for j in range(len(l_string)):
-        new_header.write(l_string[i])
+        new_header.write(l_string[j])
 
 
 def comment_header(project_name, file_type, now):
