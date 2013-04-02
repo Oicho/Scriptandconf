@@ -137,7 +137,9 @@ def comment_header(project_name, file_type, now):
     return f
 
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(prog="""Da Awesome magic generator
+script DDUDDZ""", description="precise",
+                                 epilog="AUTHORS = l autre con")
 parser.add_argument("file_name", type=str,
                     help="the header file name")
 parser.add_argument("-p", "--project_name", type=str,

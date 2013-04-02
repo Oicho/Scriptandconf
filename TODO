@@ -6,5 +6,7 @@ Generate_source.py
 //  Ecrire une classe member eui permettra de generer a la fois les prototypes et
 //  les declarations
 
--//Generer les getter/setter ecrire dans le .hh 
+-//Generer les getter/setter ecrire dans le .hh
 	 et dans le .cc a la suite des constructeurs
+
+TODO
