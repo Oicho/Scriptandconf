@@ -103,13 +103,11 @@ def parse_header(argument, file_cc, file_hxx):
         if l_string[i].find("}") != -1:
             print("endoffile")
             break
-        print(str(i) + "main loop")
         i = aux_parse(l_string, i, methods_list, members_list)
     print(members_list)
     l_string.insert(i + 1, "\n# include \"" + file_name.replace(".hh", ".hxx") + "\"\n")
     print(l_string)
     # ajouter les getter/setter dans les .hh
-    print("gspos = " + str(gspos))
     if gspos == -1:
         print("Incorrect header file.")
         quit()
@@ -120,12 +118,9 @@ def parse_header(argument, file_cc, file_hxx):
         file_hxx += members_list[i].gen_set_def(classname)
         file_hxx += members_list[i].gen_get_def(classname)
     file_hxx += "#endif " + (file_name.replace(".hh", "_HXX")).upper()
-    print("file_hxx")
-    print(file_hxx)
-    print(methods_list)
-    print(l_string)
+    fhxx = open(argument.file_name.replace(".hh", ".hxx"), "w")
+    fhxx.write(file_hxx)
     # Verifier l argument force
-    os.remove(argument.file_name)
     new_header = open(argument.file_name, "w")
     for j in range(len(l_string)):
         new_header.write(l_string[j])
