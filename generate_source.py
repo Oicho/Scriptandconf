@@ -137,9 +137,15 @@ def comment_header(project_name, file_type, now):
     return f
 
 
-parser = argparse.ArgumentParser(prog="""Da Awesome magic generator
-script DDUDDZ""", description="precise",
-                                 epilog="AUTHORS = l autre con")
+parser = argparse.ArgumentParser(prog="""Cc_generator""",
+                                 description="""    This script generates .cc
+and .hxx files by parsing a header file. The input header file must generates
+respect the tag convention written in the README file. I strongly recommend you
+to use my header generator.""",
+                                 epilog="""AUTHORS: Gauthier \"Oicho\" FRIDIERE
+Contact at: gauthier.fridiere@gmail.com
+Under the beer ware license(Revision 42):
+http://en.wikipedia.org/wiki/Beerware""")
 parser.add_argument("file_name", type=str,
                     help="the header file name")
 parser.add_argument("-p", "--project_name", type=str,
