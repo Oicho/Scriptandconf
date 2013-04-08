@@ -2,7 +2,8 @@ TODO
 Generate_source.py
 //cut le filepath pour avoir juste le nom du fichier
 //-Memoriser les constru/destru
--Traiter methods list
+-Traiter methods list:
+  Multiline methods
 //  Ecrire une classe member eui permettra de generer a la fois les prototypes et
 //  les declarations
 

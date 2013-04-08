@@ -5,7 +5,13 @@ import datetime
 
 #We create a function to clearify the code
 #Parsing arguments
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(prog="""Class_h_generator""",
+                                 description="""    This script generates header
+file.""",
+                                 epilog="""AUTHORS: Gauthier \"Oicho\" FRIDIERE
+Contact at: gauthier.fridiere@gmail.com
+Under the beer ware license(Revision 42):
+http://en.wikipedia.org/wiki/Beerware""")
 parser.add_argument("file_name", type=str,
                     help="the class name")
 parser.add_argument("-p", "--project_name", type=str,
