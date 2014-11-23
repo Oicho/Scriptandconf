@@ -16,9 +16,13 @@ alias la='ls -A'
 alias l='ls -CF'
 alias gpf='g++ -Wall -Wextra -Werror -std=c++0x -pedantic'
 alias gcf='gcc -Wall -Wextra -Werror -pedantic -std=c99'
+alias gohtml='go test -coverprofile=coverage.out; go tool cover -html=coverage.out'
 
 export EDITOR='vim'
 export PAGER='less'
+alias vi='vim'
+alias mkdir='mkdir -p'
+alias tree='tree -C'
 
 typeset -A key
 
@@ -59,4 +63,3 @@ if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
     zle -N zle-line-init
     zle -N zle-line-finish
 fi
-

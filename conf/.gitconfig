@@ -1,0 +1,57 @@
+[user]
+	email = gauthier.fridiere@gmail.com
+  name = Gauthier FRIDIERE
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+	rb = rebase
+	fe = fetch
+	undo = reset --hard
+	l = log --stat --find-renames --pretty=format:\"%C(yellow)%h%C(cyan)%d%C(reset) (%ar - %C(red)%an%C(reset)) %n%B\"
+	hist = log --graph --date=short --pretty=format:\"%C(yellow)%h %C(green)%ad%C(reset) |%C(cyan)%d%C(reset) %s (%C(red)%an%C(reset))\"
+	type = cat-file -t
+	dump = cat-file -p
+	sdiff = diff --staged
+	fp = format-patch --stdout
+	todo = grep -ie todo -ie fixme
+	ff = !git rb `git rev-parse --abbrev-ref --symbolic-full-name @{u}`
+	update = !git fe && git ff
+	pullr = pull --rebase
+	amend = commit --amend
+	fetcha = fetch --all
+[core]
+	editor = vim
+	quotepath = off
+	excludesfile = ~/.gitignore_global
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+[color "status"]
+	added = green
+	changed = blue
+	untracked = red
+[color "diff"]
+	meta = yellow
+	old = red
+	new = green
+[push]
+	default = current
+[diff]
+	renames = copies
+	mnemonicprefix = true
+[branch]
+	autosetupmerge = true
+[i18n]
+	logoutputencoding = utf8
+	commitencoding = utf8
+[help]
+	autocorrect = 10
+[credential]
+	helper = cache --timeout=3600
+[gitreview]
+	username = oicho
+[http]
+	sslVerify = false
