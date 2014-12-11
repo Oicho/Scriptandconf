@@ -1,6 +1,6 @@
 [user]
 	email = gauthier.fridiere@gmail.com
-  name = Gauthier FRIDIERE
+	name = Gauthier FRIDIERE
 [alias]
 	co = checkout
 	ci = commit
